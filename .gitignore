@@ -6,4 +6,6 @@
 !/.vim/
 !/.vim/vimrc
 
+!/.config/
+!/.config/dconf/
 !/.config/dconf/user
