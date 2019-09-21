@@ -1,6 +1,8 @@
 *
 !/.gitignore
 
+!/.bashrc
+
 !/.tmux.conf
 
 !/.vim/
