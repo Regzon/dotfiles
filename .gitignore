@@ -1,4 +1,5 @@
 *
+
 !/.gitignore
 
 !/.bashrc
@@ -11,3 +12,6 @@
 !/.config/
 !/.config/dconf/
 !/.config/dconf/user
+
+!/.themes/
+!/.themes/**/*
