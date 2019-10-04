@@ -85,6 +85,10 @@ let mapleader = ","
 map <Leader><Space> :let @/=''<CR> " Clear search
 map <Leader>t :NERDTreeToggle<CR> " Toggle NERD Tree
 
+" NerdTree configuration
+let NERDTreeIgnore = ['\.pyc$', '__pycache__']
+let NERDTreeCascadeSingleChildDir=0
+
 " Enable indents
 filetype indent on
 
