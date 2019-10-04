@@ -112,8 +112,18 @@ if ! shopt -oq posix; then
   fi
 fi
 
+# Upate path with sbin
+export PATH=$PATH:/usr/sbin
+
 # Upate path with local bin
 export PATH=$PATH:$HOME/.local/bin
 
 # Set vi mode
 set -o vi
+
+# Virtualenv configuration
+export WORKON_HOME=$HOME/.virtualenvs
+export PROJECT_HOME=$HOME/Workspaces
+export VIRTUALENVWRAPPER_PYTHON=$(which python3)
+export VIRTUALENVWRAPPER_VIRTUALENV=$(which virtualenv)
+source $HOME/.local/bin/virtualenvwrapper.sh
