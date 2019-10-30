@@ -27,7 +27,26 @@ Plug 'melonmanchan/vim-tmux-resizer'
 Plug 'python-mode/python-mode', { 'branch': 'develop' }
 Plug 'chr4/nginx.vim'
 Plug 'ekalinin/Dockerfile.vim'
+Plug 'suan/vim-instant-markdown', {'for': 'markdown'}
 call plug#end()
+
+" Set mapleader
+let mapleader = ","
+" Clear search
+map <Leader><Space> :let @/=''<CR>
+" Toggle NERD Tree
+map <Leader>t :NERDTreeToggle<CR>
+
+" Enable filetype-specific plugins
+filetype plugin on
+
+" Instatnt markdown configuration
+" Note: ensure you've installed instant-markdown-d via npm
+let g:instant_markdown_autostart = 0
+" Preview markdown file
+no <Leader>s :InstantMarkdownPreview<CR>
+" Stop markdown file preview
+no <Leader>d :InstantMarkdownStop<CR>
 
 " Python highlight
 let python_highlight_all=1
@@ -79,11 +98,6 @@ nnoremap <silent> <M-Left> :TmuxResizeLeft<cr>
 nnoremap <silent> <M-Down> :TmuxResizeDown<cr>
 nnoremap <silent> <M-Up> :TmuxResizeUp<cr>
 nnoremap <silent> <M-Right> :TmuxResizeRight<cr>
-
-" Set mapleader
-let mapleader = ","
-map <Leader><Space> :let @/=''<CR> " Clear search
-map <Leader>t :NERDTreeToggle<CR> " Toggle NERD Tree
 
 " NerdTree configuration
 let NERDTreeIgnore = ['\.pyc$', '__pycache__']

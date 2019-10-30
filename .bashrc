@@ -127,3 +127,6 @@ export PROJECT_HOME=$HOME/Workspaces
 export VIRTUALENVWRAPPER_PYTHON=$(which python3)
 export VIRTUALENVWRAPPER_VIRTUALENV=$(which virtualenv)
 source $HOME/.local/bin/virtualenvwrapper.sh
+
+# Local npm configuration
+export npm_config_prefix=$HOME/.local
