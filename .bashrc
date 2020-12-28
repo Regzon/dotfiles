@@ -112,11 +112,78 @@ if ! shopt -oq posix; then
   fi
 fi
 
+generate_words() {
+  # Random Word Generator
+
+  if [ $# -ne 1 ]
+  then
+  echo "Please specify how many random words would you like to generate !" 1>&2
+  echo "example: generate_words 3" 1>&2
+  echo "This will generate 3 random words" 1>&2
+  exit 0
+  fi
+
+  # Constants
+  X=0
+  ALL_NON_RANDOM_WORDS=/usr/share/dict/words
+
+  # total number of non-random words available
+  non_random_words=`cat "$ALL_NON_RANDOM_WORDS" | wc -l`
+
+  # while loop to generate random words
+  # number of random generated words depends on supplied argument
+  while [ "$X" -lt "$1" ]
+  do
+  random_number=`od -N3 -An -i /dev/urandom |
+  awk -v f=0 -v r="$non_random_words" '{printf "%i\n", f + r * $1 / 16777216}'`
+  sed `echo $random_number`"q;d" $ALL_NON_RANDOM_WORDS
+    let "X = X + 1"
+  done
+}
+
+docker-connect() {
+  if [ "$DOCKER_CONNECT_PID" ]; then
+    kill "$DOCKER_CONNECT_PID"
+    echo "Killed old session at $DOCKER_HOST_DISPLAY"
+    _docker-connect-cleanup
+  fi
+  DOCKER_HOST_DISPLAY="$1"
+  sh -c "ssh -o ExitOnForwardFailure=yes -L /tmp/docker-connect-\$\$.sock:/var/run/docker.sock \"$1\" -NT" &
+  DOCKER_CONNECT_PID=$!
+  export DOCKER_HOST="unix:///tmp/docker-connect-$DOCKER_CONNECT_PID.sock"
+  trap "kill -0 $DOCKER_CONNECT_PID &>/dev/null || _docker-connect-cleanup" SIGCHLD
+}
+
+# Cleanup for docker-connect
+_docker-connect-cleanup() {
+  rm ${DOCKER_HOST##*://} &>/dev/null
+  unset DOCKER_HOST DOCKER_HOST_DISPLAY DOCKER_CONNECT_PID
+}
+
 # Upate path with sbin
 export PATH=$PATH:/usr/sbin
+export PATH=$PATH:/usr/local/sbin
 
 # Upate path with local bin
 export PATH=$PATH:$HOME/.local/bin
+
+# Golang
+export PATH=$PATH:/usr/local/go/bin
+export GOPATH=$HOME/Workspaces/go
+
+# Rust
+export PATH=$PATH:$HOME/.cargo/bin
+
+source $(rustc --print sysroot)/etc/bash_completion.d/cargo
+
+# Define colored diff
+diff() {
+    tmppipe=$(mktemp)
+    chmod 600 $tmppipe
+    env diff -u --color=always "$@" > $tmppipe
+    [ $? != 2 ] && cat $tmppipe | less -R
+    rm $tmppipe
+}
 
 # Set vi mode
 set -o vi
@@ -130,3 +197,5 @@ source $HOME/.local/bin/virtualenvwrapper.sh
 
 # Local npm configuration
 export npm_config_prefix=$HOME/.local
+
+alias ll='ls -lh --color'
